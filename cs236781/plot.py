@@ -2,7 +2,6 @@ import math
 import numpy as np
 import itertools
 import matplotlib.pyplot as plt
-
 from .train_results import FitResult
 
 

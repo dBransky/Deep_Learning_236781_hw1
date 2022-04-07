@@ -1,3 +1,5 @@
+import random
+
 import torch
 from torch import Tensor
 from typing import Tuple, Iterator
@@ -21,7 +23,7 @@ def random_labelled_image(
     #  Implement according to the docstring description.
     # ====== YOUR CODE: ======
     image = torch.randint(low, high, shape, dtype=dtype)
-    label = torch.randint(0, num_classes, shape=(1, 0))
+    label = int(torch.randint(0, num_classes - 1, size=(1,))[0])
     # ========================
     return image, label
 
@@ -83,7 +85,11 @@ class RandomImageDataset(Dataset):
         #  the random state outside this method.
         #  Raise a ValueError if the index is out of range.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        if index >= self.num_samples:
+            raise ValueError()
+        with torch_temporary_seed(index):
+            image = random_labelled_image(self.image_dim, self.num_classes)
+        return image
         # ========================
 
     def __len__(self):
@@ -91,7 +97,7 @@ class RandomImageDataset(Dataset):
         :return: Number of samples in this dataset.
         """
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return self.num_samples
         # ========================
 
 
@@ -120,7 +126,9 @@ class ImageStreamDataset(IterableDataset):
         #  Yield tuples to produce an iterator over random images and labels.
         #  The iterator should produce an infinite stream of data.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        while True:
+            yield random_labelled_image(self.image_dim, num_classes=self.num_classes)
+
         # ========================
 
 
@@ -148,10 +156,12 @@ class SubsetDataset(Dataset):
         #  Return the item at index + offset from the source dataset.
         #  Raise an IndexError if index is out of bounds.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        if index >= self.subset_len:
+            raise IndexError()
+        return self.source_dataset[index + self.offset]
         # ========================
 
     def __len__(self):
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return self.subset_len
         # ========================
