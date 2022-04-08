@@ -11,7 +11,10 @@ math (delimited with $$).
 part1_q1 = r"""
 **Your answer:**
 
-
+1.
+2.not true we should sample different subsets and validate them using a dedicated valid subset 
+3.not true we cross validate out test subset using the valid subset
+4.
 Write your answer using **markdown** and $\LaTeX$:
 ```python
 # A code block

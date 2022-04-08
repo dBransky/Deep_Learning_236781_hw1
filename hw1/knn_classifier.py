@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+from PyQt5.QtCore import reset
 from torch import Tensor
 from torch.utils.data import Dataset, DataLoader
 
@@ -91,7 +92,14 @@ def l2_dist(x1: Tensor, x2: Tensor):
 
     dists = None
     # ====== YOUR CODE: ======
-    raise NotImplementedError()
+    x1_ = torch.reshape(x1, (x1.shape[0], 1, x1.shape[1]))
+    x2_ = torch.reshape(x2, (1, *x2.shape))
+    target_shape = torch.zeros((x1.shape[0], *x2.shape))
+    x1_mul_x2 = (x2_ + target_shape) * x1_
+    x1_pow = torch.reshape((x1 * x1), (x1.shape[0], 1, x1.shape[1]))
+    x2_pow = torch.reshape((x2 * x2), (1, *x2.shape))
+    result = x1_pow + x2_pow - (2 * x1_mul_x2)
+    dists = torch.sqrt(torch.sum(result, dim=2))
     # ========================
 
     return dists
