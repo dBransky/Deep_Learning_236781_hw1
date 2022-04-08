@@ -1,4 +1,5 @@
 import torch
+import torchvision.transforms.functional
 
 
 class TensorView(object):
@@ -29,7 +30,7 @@ class InvertColors(object):
         """
         # TODO: Invert the colors of the input image.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return torchvision.transforms.functional.invert(x)
         # ========================
 
 
@@ -41,7 +42,7 @@ class FlipUpDown(object):
         """
         # TODO: Flip the input image so that up is down.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return torchvision.transforms.functional.vflip(x)
         # ========================
 
 
