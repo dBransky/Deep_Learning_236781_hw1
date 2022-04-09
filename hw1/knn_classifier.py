@@ -33,7 +33,13 @@ class KNNClassifier(object):
         #     y_train.
         #  2. Save the number of classes as n_classes.
         # ====== YOUR CODE: ======
-        x_train, y_train = next(iter(dl_train))
+        batches_x = []
+        batches_y = []
+        for batch_x, batch_y in iter(dl_train):
+            batches_x.append(batch_x)
+            batches_y.append(batch_y)
+        x_train = torch.cat(batches_x)
+        y_train = torch.cat(batches_y)
         n_classes = len(dl_train.dataset.__dict__['source_dataset'].classes)
         # ========================
 
@@ -96,14 +102,11 @@ def l2_dist(x1: Tensor, x2: Tensor):
 
     dists = None
     # ====== YOUR CODE: ======
-    x1_ = torch.reshape(x1, (x1.shape[0], 1, x1.shape[1]))
-    x2_ = torch.reshape(x2, (1, *x2.shape))
-    target_shape = torch.zeros((x1.shape[0], *x2.shape))
-    x1_mul_x2 = (x2_ + target_shape) * x1_
-    x1_pow = torch.reshape((x1 * x1), (x1.shape[0], 1, x1.shape[1]))
-    x2_pow = torch.reshape((x2 * x2), (1, *x2.shape))
-    result = x1_pow + x2_pow - (2 * x1_mul_x2)
-    dists = torch.sqrt(torch.sum(result, dim=2))
+    x1_pow = x1 * x1
+    x2_pow = x2 * x2
+    x1_mul_x2 = -2*torch.matmul(x1, x2.T)
+    dists = torch.sqrt(
+        torch.sum(x1_pow, dim=1).reshape(1, x1_pow.shape[0]).T + x1_mul_x2 + torch.sum(x2_pow, dim=1).reshape(1, x2_pow.shape[0]))
     # ========================
 
     return dists
@@ -155,15 +158,24 @@ def find_best_k(ds_train: Dataset, k_choices, num_folds):
 
         # ====== YOUR CODE: ======
         accuracies.append([])
+        indices = list(range(len(ds_train)))
+        valid_set_len = int((len(ds_train) / num_folds))
         for j in range(num_folds):
-            dl_train, dl_valid = hw1.dataloaders.create_train_validation_loaders(dataset=ds_train,
-                                                                                 validation_ratio=1 / num_folds)
+            dl_train = torch.utils.data.DataLoader(
+                ds_train, batch_size=1024, num_workers=2,
+                sampler=torch.utils.data.SubsetRandomSampler(
+                    indices[0:j * valid_set_len] + indices[(j + 1) * valid_set_len:]
+                ))
+            dl_valid = torch.utils.data.DataLoader(
+                ds_train, batch_size=valid_set_len, num_workers=2,
+                sampler=torch.utils.data.SubsetRandomSampler(list(range((j * valid_set_len),
+                                                                        (j + 1) * valid_set_len)
+                                                                  )))
             x_valid, y_valid = next(iter(dl_valid))
             model.train(dl_train)
             accuracies[i].append(accuracy(y_valid, model.predict(x_valid)))
-        # ========================
-
-    best_k_idx = np.argmax([np.mean(acc) for acc in accuracies])
-    best_k = k_choices[best_k_idx]
+            # ========================
+            best_k_idx = np.argmax([np.mean(acc) for acc in accuracies])
+            best_k = k_choices[best_k_idx]
 
     return best_k, accuracies
