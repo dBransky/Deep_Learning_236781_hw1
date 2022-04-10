@@ -1,13 +1,7 @@
 import numpy as np
 import torch
-from PyQt5.QtCore import reset
 from torch import Tensor
 from torch.utils.data import Dataset, DataLoader
-
-import cs236781.dataloader_utils as dataloader_utils
-import hw1.dataloaders
-
-from . import dataloaders
 
 
 class KNNClassifier(object):

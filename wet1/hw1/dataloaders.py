@@ -1,11 +1,7 @@
-import math
-import numpy as np
 import torch
 import torch.utils.data
 from typing import Sized, Iterator
 from torch.utils.data import Dataset, Sampler
-
-import hw1.datasets
 
 
 class FirstLastSampler(Sampler):
