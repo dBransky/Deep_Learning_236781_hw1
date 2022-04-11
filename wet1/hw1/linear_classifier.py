@@ -45,7 +45,8 @@ class LinearClassifier(object):
 
         y_pred, class_scores = None, None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        class_scores = torch.matmul(x, self.weights.T)
+        y_pred = torch.argmax(class_scores, dim=1)
         # ========================
 
         return y_pred, class_scores
@@ -66,7 +67,7 @@ class LinearClassifier(object):
 
         acc = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        acc = 1 - torch.count_nonzero(y - y_pred) / y.shape[0]
         # ========================
 
         return acc * 100
