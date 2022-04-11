@@ -98,9 +98,11 @@ def l2_dist(x1: Tensor, x2: Tensor):
     # ====== YOUR CODE: ======
     x1_pow = x1 * x1
     x2_pow = x2 * x2
-    x1_mul_x2 = -2*torch.matmul(x1, x2.T)
+    x1_mul_x2 = -2 * torch.matmul(x1, x2.T)
     dists = torch.sqrt(
-        torch.sum(x1_pow, dim=1).reshape(1, x1_pow.shape[0]).T + x1_mul_x2 + torch.sum(x2_pow, dim=1).reshape(1, x2_pow.shape[0]))
+        torch.sum(x1_pow, dim=1).reshape(1, x1_pow.shape[0]).T + x1_mul_x2 + torch.sum(x2_pow, dim=1).reshape(1,
+                                                                                                              x2_pow.shape[
+                                                                                                                  0]))
     # ========================
 
     return dists
@@ -152,19 +154,20 @@ def find_best_k(ds_train: Dataset, k_choices, num_folds):
 
         # ====== YOUR CODE: ======
         accuracies.append([])
-        indices = list(range(len(ds_train)))
         valid_set_len = int((len(ds_train) / num_folds))
+        data_splits = torch.utils.data.random_split(ds_train, [valid_set_len] * num_folds)
+
         for j in range(num_folds):
+            indices = []
+            for split in data_splits:
+                if data_splits.index(split) is not j:
+                    indices += split.indices
             dl_train = torch.utils.data.DataLoader(
-                ds_train, batch_size=1024, num_workers=2,
-                sampler=torch.utils.data.SubsetRandomSampler(
-                    indices[0:j * valid_set_len] + indices[(j + 1) * valid_set_len:]
-                ))
+                ds_train, batch_size=valid_set_len * (num_folds - 1), num_workers=2,
+                sampler=torch.utils.data.RandomSampler(indices))
             dl_valid = torch.utils.data.DataLoader(
                 ds_train, batch_size=valid_set_len, num_workers=2,
-                sampler=torch.utils.data.SubsetRandomSampler(list(range((j * valid_set_len),
-                                                                        (j + 1) * valid_set_len)
-                                                                  )))
+                sampler=torch.utils.data.RandomSampler(data_splits[j]))
             x_valid, y_valid = next(iter(dl_valid))
             model.train(dl_train)
             accuracies[i].append(accuracy(y_valid, model.predict(x_valid)))
