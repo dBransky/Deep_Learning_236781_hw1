@@ -34,7 +34,10 @@ class KNNClassifier(object):
             batches_y.append(batch_y)
         x_train = torch.cat(batches_x)
         y_train = torch.cat(batches_y)
-        n_classes = len(dl_train.dataset.__dict__['source_dataset'].classes)
+        _dl_train = dl_train
+        while 'source_dataset' not in _dl_train.__dict__.keys():
+            _dl_train = _dl_train.dataset
+        n_classes = len(_dl_train.__dict__['source_dataset'].classes)
         # ========================
 
         self.x_train = x_train
@@ -163,11 +166,12 @@ def find_best_k(ds_train: Dataset, k_choices, num_folds):
                 if data_splits.index(split) is not j:
                     indices += split.indices
             dl_train = torch.utils.data.DataLoader(
-                ds_train, batch_size=valid_set_len * (num_folds - 1), num_workers=2,
-                sampler=torch.utils.data.RandomSampler(indices))
+                torch.utils.data.Subset(ds_train, indices),
+                batch_size=valid_set_len * (num_folds - 1), num_workers=2
+            )
             dl_valid = torch.utils.data.DataLoader(
-                ds_train, batch_size=valid_set_len, num_workers=2,
-                sampler=torch.utils.data.RandomSampler(data_splits[j]))
+                data_splits[j], batch_size=valid_set_len, num_workers=2
+            )
             x_valid, y_valid = next(iter(dl_valid))
             model.train(dl_train)
             accuracies[i].append(accuracy(y_valid, model.predict(x_valid)))
