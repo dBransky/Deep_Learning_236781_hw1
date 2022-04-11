@@ -23,7 +23,7 @@ class LinearClassifier(object):
 
         self.weights = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        self.weights = torch.normal(0, std=weight_std, size=(n_classes, n_features))
         # ========================
 
     def predict(self, x: Tensor):
@@ -72,15 +72,14 @@ class LinearClassifier(object):
         return acc * 100
 
     def train(
-        self,
-        dl_train: DataLoader,
-        dl_valid: DataLoader,
-        loss_fn: ClassifierLoss,
-        learn_rate=0.1,
-        weight_decay=0.001,
-        max_epochs=100,
+            self,
+            dl_train: DataLoader,
+            dl_valid: DataLoader,
+            loss_fn: ClassifierLoss,
+            learn_rate=0.1,
+            weight_decay=0.001,
+            max_epochs=100,
     ):
-
         Result = namedtuple("Result", "accuracy loss")
         train_res = Result(accuracy=[], loss=[])
         valid_res = Result(accuracy=[], loss=[])
