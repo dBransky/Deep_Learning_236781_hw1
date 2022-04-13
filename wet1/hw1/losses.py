@@ -52,10 +52,12 @@ class SVMHingeLoss(ClassifierLoss):
 
         loss = None
         # ====== YOUR CODE: ======
-        ground_y_vals = x_scores[range(len(x_scores)), y]
-        m = (x_scores.T - ground_y_vals.T).T + self.delta
+        ground_x_scores = x_scores[range(x_scores.shape[0]), y]
+        m = ((x_scores.T - ground_x_scores.T).T + self.delta)
         m[m < 0] = 0
-        loss = (torch.sum(torch.sum(m, dim=1)-self.delta, dim=0) / x.shape[0]).reshape(1, )
+        m[range(len(x)), y] = 0
+
+        loss = torch.mean(torch.sum(m, dim=1))
         # ========================
 
         # TODO: Save what you need for gradient calculation in self.grad_ctx
