@@ -3,6 +3,7 @@ from torch import Tensor
 from collections import namedtuple
 from torch.utils.data import DataLoader
 
+import wet1.hw1.losses
 from .losses import ClassifierLoss
 
 
@@ -102,7 +103,21 @@ class LinearClassifier(object):
             #     using the weight_decay parameter.
 
             # ====== YOUR CODE: ======
-            raise NotImplementedError()
+            for dl, res, update_weights in [(dl_train, train_res, True), (dl_valid, valid_res, False)]:
+                sum_losses = 0
+                batch_idx = 1
+                for x, y in dl:
+                    y_predicted, x_scores = self.predict(x)
+                    sum_losses += (loss_fn(x, y, x_scores, y_predicted) + (weight_decay / 2) * torch.pow(
+                        torch.norm(self.weights, p=2), 2))
+                    average_loss = sum_losses / batch_idx
+                    total_correct += self.evaluate_accuracy(y, y_predicted) * len(y)
+                    batch_idx += 1
+                    if update_weights:
+                        self.weights -= (learn_rate * (loss_fn.grad() + weight_decay * self.weights))
+                res.accuracy.append(total_correct / len(dl.dataset))
+                res.loss.append(average_loss)
+
             # ========================
             print(".", end="")
 
@@ -123,7 +138,10 @@ class LinearClassifier(object):
         #  The output shape should be (n_classes, C, H, W).
 
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        w = torch.clone(self.weights)
+        if has_bias:
+            w = w[:-1]
+        w_images = w.T.reshape(self.weights.shape[1], *img_shape)
         # ========================
 
         return w_images
@@ -136,7 +154,9 @@ def hyperparams():
     #  Manually tune the hyperparameters to get the training accuracy test
     #  to pass.
     # ====== YOUR CODE: ======
-    raise NotImplementedError()
+    hp['weight_std'] = 0.01
+    hp['learn_rate'] = 0.008
+    hp['weight_decay'] = 0.2
     # ========================
 
     return hp
