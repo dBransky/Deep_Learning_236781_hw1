@@ -111,12 +111,14 @@ class LinearClassifier(object):
                     sum_losses += (loss_fn(x, y, x_scores, y_predicted) + (weight_decay / 2) * torch.pow(
                         torch.norm(self.weights, p=2), 2))
                     average_loss = sum_losses / batch_idx
-                    total_correct += self.evaluate_accuracy(y, y_predicted) * len(y)
+                    total_correct += len(y) - torch.count_nonzero(y - y_predicted)
                     batch_idx += 1
                     if update_weights:
                         self.weights -= (learn_rate * (loss_fn.grad() + weight_decay * self.weights))
-                res.accuracy.append(total_correct / len(dl.dataset))
+                res.accuracy.append(total_correct / (len(dl) * dl.batch_size))
                 res.loss.append(average_loss)
+                total_correct = 0
+                average_loss = 0
 
             # ========================
             print(".", end="")
