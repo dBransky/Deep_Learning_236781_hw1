@@ -82,43 +82,29 @@ in particular, and is therefore getting lower results on unseen data.
 # ==============
 # Part 4 answers
 
-part4_q1 = r"""
-**Your answer:**
+part4_q1 = r"""The ideal plot is a unified horizontal line along Y=0 axis, in other words a perfect $y^{(i)} - \hat{ 
+y}^{(i)}=0$ for each sample, we can see that after training our model we've received a more uniformed and closer to 0 
+spread of the samples. We can also see that in the 5 best features plot there is a correlation between the $\hat{y}$ 
+and the distance from zero, (somewhat of a curve) this isn't the case with the last plot, what brings us to believe 
+that our model fits the data better than the top 5 correlation model. 
 
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
 
 """
 
 part4_q2 = r"""
-**Your answer:**
+1. Yes it is still considered a linear regression, even though we've added non-linear features we are 
+still solving a linear equation $Z=WX+b$
+2. Yes we can fit any non linear function to our features, we can engineer 
+our features as we like.
+3.Adding non-linear features may allow us to be able to separate data better, 
+data that cannot be linearly separated. since we are only adding features to our model the model will still search 
+for linear separator but upon a higher dimension. So if we had D features and added D' non-linear features our 
+hyperplane's dimension will be of (D+D'-1) instead to (D-1) """
 
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
-
-"""
-
-part4_q3 = r"""
-**Your answer:**
-
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
-
-"""
+part4_q3 = r"""1. Using np.logspace allows us to search for a hyper-parameter upon a logarithmic scale, which allows 
+us to test a wider range of values with less samples.
+2.We've folded our train data 3 times and for each fold tested every combination of degree(3),lambda(20) to sub total of
+$20*3*3$ =180 times fitted.
+ """
 
 # ==============

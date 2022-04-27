@@ -149,10 +149,10 @@ class BostonFeaturesTransformer(BaseEstimator, TransformerMixin):
 
         X_transformed = None
         # ====== YOUR CODE: ======
-        poly = sklearn.preprocessing.PolynomialFeatures(degree=self.degree)
+        # removed index 0 then index 4, features are same for all samples
+        poly = sklearn.preprocessing.PolynomialFeatures(degree=self.degree,interaction_only=True, include_bias=False)
         x_ = poly.fit_transform(X)
-        # removed index 1 then index 4, features are same for all samples
-        x_ = np.delete(x_, obj=1, axis=1)
+        X = np.delete(X, obj=0, axis=1)
         x_ = np.delete(x_, obj=4, axis=1)
         X_transformed = x_
         # ========================
