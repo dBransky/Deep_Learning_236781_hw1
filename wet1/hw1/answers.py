@@ -9,13 +9,21 @@ math (delimited with $$).
 # Part 1 answers
 
 part1_q1 = r"""
-**Your answer:**
-
-1.
-2.not true we should sample different subsets and mean our results 3.True, the test set cannot be used during 
-cross-validation or else the test result will be biased, The test set must stay hidden the entire training process 
-4.
-"""
+1.Not true, in-sample error is the error we get upon evaluating the accuracy of our model on the train 
+set, therefore the in-sample error can be measured using only the train set. not the test set. 
+2.Not true, first if the data is somehow arranged in a certain patten,for example our data has classes numbered 1,2....
+if our data is arranged by classed then splitting the data without randomizing it will harm our model's accuracy on 
+unseen data. second we must split our data so that there is enough samples to train our model and prevent over-fitting, 
+if our train set is to small we may over-fit the training set, on the other hand if we split the test set to small 
+then we wont be able to properly evaluate our model. that's why it is commonly advised to split the data in a 90/10,
+80/20,70/30,60/40 ratio, these ratios may produce different results and may require validation. 
+Splitting depends on our data, its arrangement and it's size 
+3.True, the test set cannot be used during cross-validation or else the test result will be biased, The test set must 
+stay hidden for the entire training process.
+4.True, when preforming cross-validation we validate different models/hyper-parameters against the train set, inorder to
+keep the results unbiased we split the training set into a train set and a validation set,
+the validation set acts as a proxy of test set which is used to evaluate the model's generalization.
+In other world we test the model/hyper-parameter's generalization with the validation set"""
 
 part1_q2 = r"""No, my friend's approach isn't justified, our friend is trying to tune a hyper-parameter. The 
 appropriate way of tuning hyper parameter's is with a dedicated valid-set which must be different from the test-set. 
@@ -49,10 +57,10 @@ validating on the test-set
 # Part 3 answers
 
 part3_q1 = r"""
-The exact value of the margin $\Delta between the scores is meaningless because the weights may 
+The exact value of the margin $\Delta$ between the scores is meaningless because the weights may 
 change (shrink or stretch) over the distance. The scores and their differences are affected by the magnitude of the 
 weight, bigger values increase the differences while smaller values decrease the differences In addition the lambda 
-scalar may increase of decrease changes in $\Delta so when both are chosen makes the selection of $\Delta arbitrary 
+scalar may increase of decrease changes in $\Delta$ so when both are chosen makes the selection of $\Delta$ arbitrary 
 """
 
 part3_q2 = r"""
