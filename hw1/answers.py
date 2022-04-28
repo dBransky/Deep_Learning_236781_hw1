@@ -68,7 +68,8 @@ part3_q2 = r"""
 so actually it is leaning how each number is commonly written. As we can see in the classification errors, 
 the model mistook 5 for 6 since its bottom part resembles that of a circle like 6. The svm model is looking for the 
 optimal differentiator between classes, that's why we can that the errors are more ambiguous written numbers. 
-2. Both models are similar in the way that they both predict a sample's label with an earlier given set of labelled data. 
+2. Both models are similar in the way that they both predict a sample's label with an earlier given set of labelled
+data. 
 however these models are different, Knn labels the sample based on the image that in most similar to it. While the 
 linear classifier labels the sample based on the assumption that the data can indeed be split into different types, 
 then based on the best differentiation of the data, labels our image into it's unique group. 

@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
 
-import wet1.cs236781.dataloader_utils as dl_utils
+import cs236781.dataloader_utils as dl_utils
 
 DATASET_SIZE = 1000
 DATA_SIZE = 100

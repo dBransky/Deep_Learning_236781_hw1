@@ -3,7 +3,7 @@ from torch import Tensor
 from collections import namedtuple
 from torch.utils.data import DataLoader
 
-import wet1.hw1.losses
+import hw1.losses
 from .losses import ClassifierLoss
 
 
